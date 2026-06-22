@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local data & models (avoid committing large CSV datasets and pkl models)
+data/raw/*.csv
+data/processed/*.csv
+data/features/*.csv
+models/*.pkl
+models/ensemble/*.pkl
+models/clinicalbert_risk/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo

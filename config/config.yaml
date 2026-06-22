@@ -1,0 +1,129 @@
+# HealthRisk AI Configuration
+# All secrets (API keys) should be stored in .env file, NOT here
+
+data_sources:
+  mimic_iv:
+    path: "data/raw/mimic_iv/"
+    tables:
+      - "patients"
+      - "admissions"
+      - "diagnoses_icd"
+      - "labevents"
+      - "prescriptions"
+      - "procedures_icd"
+      - "icustays"
+      - "chartevents"
+  
+  clinicaltrials:
+    base_url: "https://clinicaltrials.gov/api/v2/studies"
+    page_size: 100
+  
+  fda_faers:
+    base_url: "https://api.fda.gov/drug/event.json"
+    limit: 100
+  
+  who_gho:
+    base_url: "https://ghoapi.azureedge.net/api"
+  
+  cdc_wonder:
+    data_dir: "data/raw/cdc_wonder/"
+
+feature_engineering:
+  lab_trend_window_days: 90        # Look-back for lab trend features
+  utilization_history_months: 12   # Prior utilization window
+  comorbidity_lookback_years: 3    # Charlson/Elixhauser lookback
+
+models:
+  random_seed: 42
+  test_size: 0.20
+  val_size: 0.10
+  cv_folds: 5
+  
+  clinicalbert:
+    model_name: "emilyalsentzer/Bio_ClinicalBERT"
+    max_length: 512
+    batch_size: 16
+    learning_rate: 2.0e-5
+    epochs: 5
+    warmup_steps: 500
+  
+  gat:
+    hidden_channels: 64
+    out_channels: 32
+    heads: 4
+    num_layers: 3
+    dropout: 0.3
+    edge_dropout: 0.1
+    learning_rate: 1.0e-3
+    epochs: 100
+  
+  xgboost:
+    n_estimators: 500
+    learning_rate: 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+    min_child_weight: 5
+    reg_lambda: 1.0
+    reg_alpha: 0.1
+  
+  lightgbm:
+    n_estimators: 500
+    learning_rate: 0.05
+    num_leaves: 31
+    min_child_samples: 20
+    subsample: 0.8
+    colsample_bytree: 0.8
+  
+  survival:
+    cox_penalizer: 0.1
+    deepsurv_lr: 1.0e-3
+    deepsurv_epochs: 100
+    batch_size: 256
+
+evaluation:
+  targets:
+    auroc_clinical: 0.80
+    auprc_rare_event: 0.40
+    brier_score: 0.15
+    cindex_readmission: 0.70
+    cindex_complication: 0.72
+    insurance_r2: 0.25
+    insurance_mape: 0.15
+    credit_gini: 0.50
+    credit_ks: 0.30
+    portfolio_sharpe: 1.0
+    portfolio_ir: 0.50
+    portfolio_max_drawdown: 0.25
+
+financial:
+  insurance:
+    discount_rate: 0.06
+    loss_ratio_target: 0.85
+    ibnr_development_periods: 24  # months
+  
+  credit_risk:
+    pd_threshold_high: 0.05      # PD > 5% = high risk
+    pd_threshold_very_high: 0.10
+    lgd_hospital: 0.40           # Loss given default for hospital bonds
+  
+  pharma:
+    discount_rate: 0.10
+    phase_success_rates:
+      phase_1_to_2: 0.63
+      phase_2_to_3: 0.31
+      phase_3_to_approval: 0.493  # 0.58 × 0.85
+    patent_duration_years: 20
+    monte_carlo_simulations: 10000
+
+simulation:
+  start_year: 2010
+  end_year: 2020
+  quarters_per_year: 4
+  initial_portfolio_value: 100_000_000   # $100M
+  scoring_max_points: 1000
+
+mlops:
+  mlflow_tracking_uri: "mlruns/"
+  experiment_name: "healthrisk_ai"
+  model_registry_name: "healthrisk_models"
