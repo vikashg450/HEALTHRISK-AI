@@ -217,13 +217,13 @@ pytest tests/ -v --cov=src --cov-report=html --cov-fail-under=80
 - [x] Unit & integration tests (60+ tests, target ≥80% coverage)
 
 ### Documentation (8 docs)
-- [ ] `docs/01_technical_architecture.md`
-- [ ] `docs/02_model_performance_report.md`
-- [ ] `docs/03_feature_engineering.md`
-- [ ] `docs/04_healthcare_domain_knowledge.md`
-- [ ] `docs/05_financial_applications.md`
-- [ ] `docs/06_healthrisk_lab_game_design.md`
-- [ ] `docs/model_cards/*.md` (one per model)
+- [x] `docs/01_technical_architecture.md`
+- [x] `docs/02_model_performance_report.md`
+- [x] `docs/03_feature_engineering.md`
+- [x] `docs/04_healthcare_domain_knowledge.md`
+- [x] `docs/05_financial_applications.md`
+- [x] `docs/06_healthrisk_lab_game_design.md`
+- [x] `docs/model_cards/*.md` (one per model)
 - [x] `README.md`
 
 ---
